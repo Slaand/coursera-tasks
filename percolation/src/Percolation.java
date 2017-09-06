@@ -36,7 +36,7 @@ public class Percolation {
             wqu.union(index(row, col), bottom);
         }
 
-        // left/right
+        // left/right side
         if (col > 1 && isOpen(row, col - 1)) {
             wqu.union(index(row, col), index(row, col - 1));
         }
@@ -44,7 +44,7 @@ public class Percolation {
             wqu.union(index(row, col), index(row, col + 1));
         }
 
-        // upper/bottom
+        // upper/bottom side
         if (row > 1 && isOpen(row - 1, col)) {
             wqu.union(index(row, col), index(row - 1, col));
         }
@@ -91,6 +91,7 @@ public class Percolation {
     }
 
     private int index(int row, int col) {
+        // return index from our virtual 2d array
         return size * (row-1) + col;
     }
 }

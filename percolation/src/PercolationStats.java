@@ -9,7 +9,6 @@ public class PercolationStats {
 
     public PercolationStats(int size, int checks) {
 
-        int sites = 0;
         this.checks = checks;
 
         if (size <= 0 || checks < 1) {
@@ -24,10 +23,9 @@ public class PercolationStats {
                 int pup = StdRandom.uniform(1, size+1);
                 if (!perc.isOpen(pop, pup)) {
                     perc.open(pop, pup);
-                    sites++;
                 }
             }
-            dafuk[i] = (double) sites / (size * size);
+            dafuk[i] = (double) perc.numberOfOpenSites() / (size * size);
         }
     }
 

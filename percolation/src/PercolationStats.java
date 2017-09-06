@@ -4,30 +4,30 @@ import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
 
-    private double[] dafuk;
-    private int trials;
-    private int n;
-    private Percolation perc;
+    private final double[] dafuk;
+    private final int checks;
 
-    public PercolationStats(int n, int trials) {
+    public PercolationStats(int size, int checks) {
 
-        this.n = n;
-        this.trials = trials;
+        int sites = 0;
+        this.checks = checks;
 
-        if (n < 0 || trials < 1) {
-            throw new IllegalArgumentException("N or T < 0");
+        if (size <= 0 || checks < 1) {
+            throw new IllegalArgumentException("N or T param <= 0");
         }
 
-        dafuk = new double[trials];
-        for(int i=0; i<trials; i++) {
-            perc = new Percolation(n);
-            while(!perc.percolates()) {
-                int pop = StdRandom.uniform(1,n+1);
-                int pup = StdRandom.uniform(1,n+1);
-                if(!perc.isOpen(pop,pup)) {
-                    perc.isOpen(pop,pup);
+        dafuk = new double[checks];
+        for (int i = 0; i < checks; i++) {
+            Percolation perc = new Percolation(size);
+            while (!perc.percolates()) {
+                int pop = StdRandom.uniform(1, size+1);
+                int pup = StdRandom.uniform(1, size+1);
+                if (!perc.isOpen(pop, pup)) {
+                    perc.open(pop, pup);
+                    sites++;
                 }
             }
+            dafuk[i] = (double) sites / (size * size);
         }
     }
 
@@ -40,11 +40,11 @@ public class PercolationStats {
     }
 
     public double confidenceLo() {
-        return mean() - (1.96*stddev()/Math.sqrt(trials));
+        return mean() - ((1.96*stddev())/Math.sqrt(checks));
     }
 
     public double confidenceHi() {
-        return mean() + (1.96*stddev()/Math.sqrt(trials));
+        return mean() + ((1.96*stddev())/Math.sqrt(checks));
     }
 
     public static void main(String[] args) {
@@ -53,10 +53,10 @@ public class PercolationStats {
             System.out.println("Not enough args");
         }
 
-        final int N = Integer.parseInt(args[0]);
-        final int M = Integer.parseInt(args[1]);
+        final int size = Integer.parseInt(args[0]);
+        final int checks = Integer.parseInt(args[1]);
 
-        PercolationStats percstat = new PercolationStats(N, M);
+        PercolationStats percstat = new PercolationStats(size, checks);
 
         System.out.println("mean = " +percstat.mean());
         System.out.println("stddev = " +percstat.stddev());

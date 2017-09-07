@@ -1,6 +1,6 @@
 
-import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
+import static edu.princeton.cs.algs4.StdRandom.uniform;
 
 public class PercolationStats {
 
@@ -19,8 +19,8 @@ public class PercolationStats {
         for (int i = 0; i < checks; i++) {
             Percolation perc = new Percolation(size);
             while (!perc.percolates()) {
-                int pop = StdRandom.uniform(1, size+1);
-                int pup = StdRandom.uniform(1, size+1);
+                int pop = uniform(1, size+1);
+                int pup = uniform(1, size+1);
                 if (!perc.isOpen(pop, pup)) {
                     perc.open(pop, pup);
                 }

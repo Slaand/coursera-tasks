@@ -3,7 +3,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
 
     private final boolean[][] grid;
-    private final int top = 0;
+    private final int top;
     private final int bottom;
     private final int size;
     private int numsites;
@@ -14,10 +14,11 @@ public class Percolation {
         if (n < 1) throw new IllegalArgumentException("N isn't greater than 0");
 
         size = n;
-        bottom = size*size+1;
+        top = 0;
+        bottom = size * size + 1;
         grid = new boolean[size][size];
         numsites = 0;
-        wqu = new WeightedQuickUnionUF(bottom+1);
+        wqu = new WeightedQuickUnionUF(bottom + 1);
 
     }
 
@@ -27,7 +28,7 @@ public class Percolation {
             throw new IllegalArgumentException("row index out of bounds");
         }
 
-        grid[row-1][col-1] = true;
+        grid[row - 1][col - 1] = true;
 
         if (row == 1) {
             wqu.union(index(row, col), top);
@@ -61,7 +62,7 @@ public class Percolation {
             throw new IllegalArgumentException("row index out of bounds");
         }
 
-        return grid[row-1][col-1];
+        return grid[row - 1][col - 1];
     }
 
     public boolean isFull(int row, int col) {
@@ -88,6 +89,6 @@ public class Percolation {
 
     private int index(int row, int col) {
         // return index from our virtual 2d array
-        return size * (row-1) + col;
+        return size * (row - 1) + col;
     }
 }

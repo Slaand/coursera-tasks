@@ -1,6 +1,6 @@
 
 import edu.princeton.cs.algs4.StdStats;
-import static edu.princeton.cs.algs4.StdRandom.uniform;
+import edu.princeton.cs.algs4.StdRandom;
 
 public class PercolationStats {
 
@@ -19,8 +19,8 @@ public class PercolationStats {
         for (int i = 0; i < checks; i++) {
             Percolation perc = new Percolation(size);
             while (!perc.percolates()) {
-                int pop = uniform(1, size+1);
-                int pup = uniform(1, size+1);
+                int pop = StdRandom.uniform(1, size + 1);
+                int pup = StdRandom.uniform(1, size + 1);
                 if (!perc.isOpen(pop, pup)) {
                     perc.open(pop, pup);
                 }
@@ -38,11 +38,11 @@ public class PercolationStats {
     }
 
     public double confidenceLo() {
-        return mean() - ((1.96*stddev())/Math.sqrt(checks));
+        return mean() - ((1.96 * stddev()) / Math.sqrt(checks));
     }
 
     public double confidenceHi() {
-        return mean() + ((1.96*stddev())/Math.sqrt(checks));
+        return mean() + ((1.96 * stddev()) / Math.sqrt(checks));
     }
 
     public static void main(String[] args) {
@@ -56,10 +56,10 @@ public class PercolationStats {
 
         PercolationStats percstat = new PercolationStats(size, checks);
 
-        System.out.println("mean = " +percstat.mean());
-        System.out.println("stddev = " +percstat.stddev());
-        System.out.println("conflo = " +percstat.confidenceLo());
-        System.out.println("confhi = " +percstat.confidenceHi());
+        System.out.println("mean = " + percstat.mean());
+        System.out.println("stddev = " + percstat.stddev());
+        System.out.println("conflo = " + percstat.confidenceLo());
+        System.out.println("confhi = " + percstat.confidenceHi());
 
     }
 }

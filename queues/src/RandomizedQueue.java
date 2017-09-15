@@ -1,5 +1,5 @@
-import java.util.Iterator;
 
+import java.util.Iterator;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
@@ -8,7 +8,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private int size = 0;
 
     public RandomizedQueue() {
-        queue = (Item[]) new Object[1];
+        queue = (Item[]) new Object[2];
     }
 
     public boolean isEmpty() {
@@ -22,7 +22,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private void resize(int capacity) {
 
         Item[] copy = (Item[]) new Object[capacity];
-        for(int i=0; i<queue.length; i++) {
+        for (int i = 0; i < queue.length; i++) {
             copy[i] = queue[i];
         }
         queue = copy;
@@ -30,37 +30,50 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     public void enqueue(Item item) {
 
-        if(item == null) { throw new java.lang.IllegalArgumentException(); }
-        if(size == queue.length) { resize(2 * queue.length); }
+        if (item == null) {
+            throw new java.lang.IllegalArgumentException();
+        }
+        if (size == queue.length) {
+            resize(2 * queue.length);
+        }
         queue[size++] = item;
     }
 
     public Item dequeue() {
 
-        if(isEmpty()) { throw new java.util.NoSuchElementException(); }
-        if(size > 0 && size == queue.length / 4) resize(queue.length / 2);
+        if (isEmpty()) {
+            throw new java.util.NoSuchElementException();
+        }
 
-        int randNum = StdRandom.uniform(0, size());
+        // if(size > 0 && size == queue.length / 4) resize(queue.length / 2);
+
+        int randNum = StdRandom.uniform(size());
         Item rand = this.queue[randNum];
 
-        queue[randNum] = null;
+        if (randNum != size - 1) queue[randNum] = queue[size - 1];
 
+        queue[--size] = null;
         return rand;
     }
 
     public Item sample() {
 
-        if(isEmpty()) { throw new java.util.NoSuchElementException(); }
-        int randNum = StdRandom.uniform(0, size());
+        if (isEmpty()) {
+            throw new java.util.NoSuchElementException();
+        }
+
+        int randNum = StdRandom.uniform(size());
         return queue[randNum];
     }
 
     public Iterator<Item> iterator() {
-        // return an independent iterator over items in random order
         return new Iterator<Item>() {
+
+            private int num = 0;
+
             @Override
             public boolean hasNext() {
-                if(size <= 0) {
+                if (size <= 0) {
                     throw new java.util.NoSuchElementException();
                 } else {
                     return true;
@@ -69,10 +82,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
             @Override
             public Item next() {
-
-                if(size <= 0) { throw new java.util.NoSuchElementException(); }
-                //Item item = this.queue
-                return null;
+                if (size <= 0) {
+                    throw new java.util.NoSuchElementException();
+                }
+                return queue[num++];
             }
 
             @Override
@@ -84,19 +97,5 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     public static void main(String[] args) {
         // unit testing (optional)
-
-        /*RandomizedQueue rand = new RandomizedQueue();
-        rand.enqueue("1");
-        rand.enqueue("2");
-        rand.enqueue("3");
-        rand.enqueue("4");
-        rand.enqueue("5");
-        rand.enqueue("6");
-        System.out.println(rand.size());
-        for(int i=0; i<rand.size(); i++) {
-            System.out.println(rand.dequeue());
-        }*/
-
     }
-
 }

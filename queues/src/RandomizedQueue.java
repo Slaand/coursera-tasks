@@ -1,5 +1,6 @@
 
 import java.util.Iterator;
+
 import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
@@ -33,9 +34,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (item == null) {
             throw new java.lang.IllegalArgumentException();
         }
+
         if (size == queue.length) {
             resize(2 * queue.length);
         }
+
         queue[size++] = item;
     }
 
@@ -45,13 +48,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new java.util.NoSuchElementException();
         }
 
-        // if(size > 0 && size == queue.length / 4) resize(queue.length / 2);
-
         int randNum = StdRandom.uniform(size());
         Item rand = this.queue[randNum];
 
         if (randNum != size - 1) queue[randNum] = queue[size - 1];
-
         queue[--size] = null;
         return rand;
     }
@@ -61,38 +61,42 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (isEmpty()) {
             throw new java.util.NoSuchElementException();
         }
-
         int randNum = StdRandom.uniform(size());
         return queue[randNum];
     }
 
     public Iterator<Item> iterator() {
-        return new Iterator<Item>() {
+        return new RandomizedIterator();
+    }
 
-            private int num = 0;
+    private class RandomizedIterator implements Iterator<Item> {
 
-            @Override
-            public boolean hasNext() {
-                if (size <= 0) {
-                    throw new java.util.NoSuchElementException();
-                } else {
-                    return true;
-                }
+        private int tempSize = size;
+        private final Item[] copy;
+
+        private RandomizedIterator() {
+            copy = (Item[]) new Object[tempSize];
+            System.arraycopy(queue, 0, copy, 0, tempSize); // queue -> copy
+        }
+
+        public boolean hasNext() {
+            return tempSize > 0;
+        }
+
+        public void remove() {
+            throw new java.lang.UnsupportedOperationException();
+        }
+
+        public Item next() {
+
+            if (!hasNext()) {
+                throw new java.util.NoSuchElementException();
             }
-
-            @Override
-            public Item next() {
-                if (size <= 0) {
-                    throw new java.util.NoSuchElementException();
-                }
-                return queue[num++];
-            }
-
-            @Override
-            public void remove() {
-                throw new java.lang.UnsupportedOperationException();
-            }
-        };
+            int randNum = StdRandom.uniform(tempSize);
+            Item item = copy[randNum];
+            copy[--tempSize] = null;
+            return item;
+        }
     }
 
     public static void main(String[] args) {

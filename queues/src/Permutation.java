@@ -9,18 +9,18 @@ public class Permutation {
             System.out.println("Not enough args");
         }
 
-        final int nums = Integer.parseInt(args[0]);
+        final int param = Integer.parseInt(args[0]); // read
 
         RandomizedQueue<String> queue = new RandomizedQueue<>();
         while (!StdIn.isEmpty()) {
             queue.enqueue(StdIn.readString());
         }
 
-        if (nums < 0 || nums > queue.size()) {
+        if (param < 0 || param > queue.size()) {
             throw new java.lang.IllegalArgumentException();
         }
 
-        for (int i = 0; i < nums; i++) {
+        for (int i = 0; i < param; i++) {
             System.out.println(queue.dequeue());
         }
     }

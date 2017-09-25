@@ -34,13 +34,9 @@ public class Point implements Comparable<Point> {
 
     public int compareTo(Point that) {
 
-        if (this.y == that.y) {
-            return 0;
-        }
-        if (this.y < that.y || (this.y == that.y && this.x < that.y)) {
-            return -1;
-        }
-        return 1;
+        if (this.y == that.y) return this.x - that.x;
+        return this.y - that.y;
+
         // compare two points by y-coordinates, breaking ties by x-coordinates
     }
 

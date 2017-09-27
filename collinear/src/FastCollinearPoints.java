@@ -1,71 +1,57 @@
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Arrays;
 
 public class FastCollinearPoints {
 
-    private ArrayList<LineSegment> segmentList;
+    private ArrayList<LineSegment> segmentList = new ArrayList<>();
 
     public FastCollinearPoints(Point[] points) {
 
-        if(points == null) {
+        if (points == null) {
             throw new IllegalArgumentException();
         }
 
         int length = points.length;
-        segmentList = new ArrayList<>();
         Point[] save = new Point[length];
         System.arraycopy(points, 0, save, 0, length);
 
-        for(int k=1; k<length; k++) {
-            if(save[k].compareTo(save[k-1]) == 0) {
+        for (int k = 1; k < length; k++) {
+
+            if (save[k].compareTo(save[k - 1]) == 0) {
+                throw new IllegalArgumentException();
+            }
+
+            if (save[k - 1] == null) {
                 throw new IllegalArgumentException();
             }
         }
 
-        // sorting ???
+        for (Point p : points) {
 
-        // finds all line segments containing 4 or more points
-    }
+            Arrays.sort(save);
+            Arrays.sort(save, p.slopeOrder());
 
-    private static void merge(Point[] a, Point[] aux, int lo, int mid, int hi, Comparator<Point> comparator)
-    {
+            int min = 0;
+            while (min < save.length && p.slopeTo(save[min]) == Double.NEGATIVE_INFINITY) min++;
+            int max = min;
 
-        for (int k = lo; k <= hi; k++)
-            aux[k] = a[k];
-
-        int i = lo, j = mid+1;
-        for (int k = lo; k <= hi; k++)
-        {
-            if      (i > mid)              a[k] = aux[j++];
-            else if (j > hi)               a[k] = aux[i++];
-            else if (less(comparator, aux[j], aux[i])) a[k] = aux[j++];
-            else                           a[k] = aux[i++];
+            while (min < save.length) {
+                while (max < save.length && p.slopeTo(save[max]) == p.slopeTo(save[min])) max++;
+                if (max - min >= 3) {
+                    Point pMin = save[min].compareTo(p) < 0 ? save[min] : p;
+                    Point pMax = save[max - 1].compareTo(p) > 0 ? save[max - 1] : p;
+                    if (p == pMin) {
+                        segmentList.add(new LineSegment(pMin, pMax));
+                    }
+                }
+                min = max;
+            }
         }
     }
 
-    private static void sort(Point[] a, Point[] aux, int lo, int hi, Comparator<Point> comparator)
-    {
-        if (hi <= lo) return;
-        int mid = lo + (hi - lo) / 2;
-        sort(a, aux, lo, mid, comparator);
-        sort(a, aux, mid+1, hi, comparator);
-        // if (!less(a[mid+1], a[mid])) return;
-        merge(a, aux, lo, mid, hi, comparator);
-    }
-
-    private static boolean less(Comparator<Point> comparator, Point v, Point w) {
-        return comparator.compare(v, w) < 0;
-    }
-
-    public int numberOfSegments() {
-
-        // the number of line segments
-        return segmentList.size();
-    }
+    public int numberOfSegments() { return segmentList.size(); }
 
     public LineSegment[] segments() {
-
-        // the line segments
         LineSegment[] segments = new LineSegment[segmentList.size()];
         return segmentList.toArray(segments);
     }
